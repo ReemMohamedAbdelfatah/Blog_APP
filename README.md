@@ -33,6 +33,7 @@
 # 📖 [Blog_App] <a name="about-project"></a>
 
 **[Blog_App]** is a blog app based on ruby on rails. This app will feature users, posts, comments, likes.
+**[ERD_Diagram]**<a name="built-with">https://github.com/microverseinc/curriculum-rails/blob/main/blog-app/images/blog_app_erd.png</a> 
 
 ## 🛠 Built With <a name="built-with"></a>
 
