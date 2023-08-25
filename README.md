@@ -12,7 +12,6 @@
   - [Install](#install)
   - [Usage](#usage)
   - [Run tests](#run-tests)
-  - [Deployment](#deployment)
 - [👥 Authors](#authors)
 - [🔭 Future Features](#future-features)
 - [🤝 Contributing](#contributing)
@@ -87,9 +86,6 @@ To run tests, run the following command:
 
 rails test
 
-### Deployment
-
-You can deploy this project using:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
