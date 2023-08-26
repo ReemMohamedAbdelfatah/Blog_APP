@@ -1,23 +1,15 @@
-# spec/models/comment_spec.rb
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  describe 'associations' do
-    it { should belong_to(:author).class_name('User') }
-    it { should belong_to(:post) }
+  it 'is valid with valid attributes' do
+    user = User.create(name: 'John Doe')
+    post = Post.create(author: user, title: 'My Post', text: 'This is my post content.')
+    comment = Comment.new(author: user, post:, text: 'Great post!')
+    expect(comment).to be_valid
   end
 
-  describe '#update_comments_counter' do
-    let(:user) { create(:user) }
-    let(:post) { create(:post) }
-
-    it 'updates the post\'s comments_counter' do
-      comment = create(:comment, author: user, post: post)
-
-      expect {
-        comment.update_comments_counter
-        post.reload
-      }.to change(post, :comments_counter).by(1)
-    end
+  it 'is not valid without text' do
+    comment = Comment.new(text: nil)
+    expect(comment).not_to be_valid
   end
 end

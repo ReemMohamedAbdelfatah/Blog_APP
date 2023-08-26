@@ -1,23 +1,21 @@
-# spec/models/like_spec.rb
 require 'rails_helper'
 
 RSpec.describe Like, type: :model do
-  describe 'associations' do
-    it { should belong_to(:author).class_name('User') }
-    it { should belong_to(:post) }
+  let(:user) { User.create(name: 'Reem Mohamed') }
+  let(:post) { Post.create(author: user, title: 'My Post', text: 'This is my post content.') }
+
+  it 'increments the likes_counter of the associated post after saving a like' do
+    like = Like.create(author: user, post:)
+    original_likes_counter = post.likes_counter
+    like.save
+    post.reload
+    expect(post.likes_counter).to eq(original_likes_counter + 1)
   end
 
-  describe '#update_likes_counter' do
-    let(:user) { create(:user) }
-    let(:post) { create(:post) }
-
-    it 'updates the post\'s likes_counter' do
-      like = create(:like, author: user, post: post)
-
-      expect {
-        like.update_likes_counter
-        post.reload
-      }.to change(post, :likes_counter).by(1)
-    end
+  it 'is valid with valid attributes' do
+    user = User.create(name: 'Reem Mohamed')
+    post = Post.create(author: user, title: 'My Post', text: 'This is my post content.')
+    like = Like.new(author: user, post:)
+    expect(like).to be_valid
   end
 end

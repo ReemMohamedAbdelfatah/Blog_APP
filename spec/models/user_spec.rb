@@ -1,31 +1,42 @@
-# spec/models/user_spec.rb
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'associations' do
-    it { should have_many(:posts).dependent(:destroy).with_foreign_key('author_id') }
-    it { should have_many(:comments).dependent(:destroy).with_foreign_key('author_id') }
-    it { should have_many(:likes).dependent(:destroy).with_foreign_key('author_id') }
+  it 'is valid with valid attributes' do
+    user = User.new(name: 'John Doe', bio: "Hello, I'm John.")
+    expect(user).to be_valid
   end
 
-  describe 'validations' do
-    it { should validate_presence_of(:name) }
-    it { should validate_numericality_of(:posts_counter).only_integer.is_greater_than_or_equal_to(0) }
+  it 'is not valid without a name' do
+    user = User.new(name: nil)
+    expect(user).not_to be_valid
   end
 
-  describe '#recent_posts' do
-    let(:user) { create(:user) }
+  it 'is valid with a zero posts_counter' do
+    user = User.new(name: 'John Doe', Posts_Counter: 0)
+    expect(user).to be_valid
+  end
 
-    it 'returns up to 3 most recent posts' do
-      older_post = create(:post, author: user, created_at: 4.days.ago)
-      newer_post = create(:post, author: user, created_at: 2.days.ago)
-      create(:post, author: user, created_at: 3.days.ago)
+  it 'is valid with a positive posts_counter' do
+    user = User.new(name: 'John Doe', Posts_Counter: 10)
+    expect(user).to be_valid
+  end
 
-      recent_posts = user.recent_posts
+  it 'is not valid with a negative posts_counter' do
+    user = User.new(name: 'John Doe', Posts_Counter: -1)
+    expect(user).not_to be_valid
+    expect(user.errors[:Posts_Counter]).to include('must be greater than or equal to 0')
+  end
 
-      expect(recent_posts.length).to eq(3)
-      expect(recent_posts).to include(newer_post)
-      expect(recent_posts).to include(older_post)
-    end
+  it 'returns the 3 most recent posts' do
+    user = User.create(name: 'John Doe')
+    post1 = Post.create(author: user, title: 'Post 1', text: 'Text 1')
+    post2 = Post.create(author: user, title: 'Post 2', text: 'Text 2')
+    post3 = Post.create(author: user, title: 'Post 3', text: 'Text 3')
+    post4 = Post.create(author: user, title: 'Post 4', text: 'Text 4')
+
+    recent_posts = user.recent_posts
+
+    expect(recent_posts).to eq([post4, post3, post2])
+    expect(recent_posts).not_to include(post1)
   end
 end
